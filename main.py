@@ -22,15 +22,33 @@ def get_problem_data(url):
         #check response
         if response.status_code == 200:
             
-            #if successful, parse HTML - problem description in "description" meta tag
+            #save lxml file
             soup = BeautifulSoup(response.text, 'lxml')
 
+            #dump lxml file
+            ''' 
             f = open("soupfile.txt", "a")
             f.write(str(soup))
-            #print(soup)
+            print(soup) '''
 
-            
+            #get __NEXT_DATA__ script tag (contains JSON content)
+            script_tag = soup.find('script', attrs={'id': '__NEXT_DATA__'})
+            if script_tag:
+                #parse JSON data
+                data = json.loads(script_tag.string)
+
+                #dump JSON data
+                f = open("data/description_json.txt", "a")
+                f.write(str(json.dumps(data, indent=4)))
+
+                #return description
+                description = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [{}])[0].get('state', {}).get('data', {}).get('question', {}).get('content', '')
+                print(description)
+                return description
+
         else:
+            if response.status_code == 404:
+                return f"Invalid problem name, check spelling and try again"
             return f"Error, status code: {response.status_code}"
     #handle exceptions: bad urls or no internet
     except requests.RequestException as e:
