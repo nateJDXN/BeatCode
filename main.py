@@ -2,6 +2,7 @@ import re
 import json
 import requests
 from bs4 import BeautifulSoup
+from github import GitHub
 
 def generate_url(problem_name):
     url = "https://leetcode.com/problems/"
