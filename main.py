@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -12,6 +13,11 @@ def generate_url(problem_name):
     url += "/"
     #print(url)
     return url
+
+def clean_data(data):
+    clean = re.sub(r'<[^>]*>', '', data)
+    clean = clean.replace("&nbsp;", "")
+    return clean
 
 
 def get_problem_data(url):
@@ -42,8 +48,12 @@ def get_problem_data(url):
                 f.write(str(json.dumps(data, indent=4)))
 
                 #return description
-                description = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [{}])[0].get('state', {}).get('data', {}).get('question', {}).get('content', '')
-                print(description)
+                data = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [{}])[7].get('state', {}).get('data', {}).get('question', {}).get('content', '')
+                
+                #clean data
+                description = clean_data(data)
+                 
+                # print(description)
                 return description
 
         else:
