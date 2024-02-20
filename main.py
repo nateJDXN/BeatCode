@@ -5,6 +5,7 @@ import json
 import requests
 import config
 from bs4 import BeautifulSoup
+from mdutils.mdutils import MdUtils
 
 path = config.path
 
@@ -69,7 +70,7 @@ def get_problem_data(url):
     except requests.RequestException as e:
         return f"{str(e)}"
     
-def add_problem(name, description, language):
+def add_problem(name, language, description, solution):
 
     #check if repo exists, if not create it
     if os.path.exists(path):
@@ -82,19 +83,30 @@ def add_problem(name, description, language):
         os.mkdir(problem_path)
         print(problem_path, "created!")
 
-        #add language subfolder
-        language_path = problem_path + '/' + language
-        if not os.path.exists(language_path):
-            os.mkdir(language_path)
-            print(language_path, "created!")
+    #add language subfolder
+    language_path = problem_path + '/' + language
+    if not os.path.exists(language_path):
+        os.mkdir(language_path)
+        print(language_path, "created!")
+
+    #store the problem description and solution in a markdown file
+    md_title = name + language + 'Solution'
+    md_path = os.path.join(language_path, 'solution')
+    md = MdUtils(file_name=md_path, title=md_title)
+    md.new_paragraph(description, 'i')
+    md.insert_code(solution, language)
+    md.create_md_file()
+    return
+
 
 def main():
-    problem_name = input("What problem did you solve?").lower()
-    language = input("What language did you use?").lower()
+    problem_name = input("What problem did you solve?   ").lower()
+    language = input("What language did you use?    ").lower()
+    solution = input("Copy and paste your solution:     ")
     url = generate_url(problem_name)
     description = get_problem_data(url)
 
-    add_problem(problem_name, description, language)
+    add_problem(problem_name, language, description, solution)
     
 main()
 
