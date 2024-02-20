@@ -1,8 +1,12 @@
 import re
+import os
+import git
 import json
 import requests
+import config
 from bs4 import BeautifulSoup
-from github import GitHub
+
+path = config.path
 
 def generate_url(problem_name):
     url = "https://leetcode.com/problems/"
@@ -65,13 +69,32 @@ def get_problem_data(url):
     except requests.RequestException as e:
         return f"{str(e)}"
     
+def add_problem(name, description, language):
 
+    #check if repo exists, if not create it
+    if os.path.exists(path):
+        repo = git.Repo(path)
+    else:
+        return f"No repository found. Create a git repository and add the path to config.py or as the local path variable. \n (It is reccomended to not publish your path)"
+
+    problem_path = path + '/' + name
+    if not os.path.exists(problem_path):
+        os.mkdir(problem_path)
+        print(problem_path, "created!")
+
+        #add language subfolder
+        language_path = problem_path + '/' + language
+        if not os.path.exists(language_path):
+            os.mkdir(language_path)
+            print(language_path, "created!")
 
 def main():
     problem_name = input("What problem did you solve?").lower()
+    language = input("What language did you use?").lower()
     url = generate_url(problem_name)
     description = get_problem_data(url)
-    print(description)
+
+    add_problem(problem_name, description, language)
     
 main()
 
