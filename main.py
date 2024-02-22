@@ -23,6 +23,10 @@ def generate_url(problem_name):
 def clean_data(data):
     clean = re.sub(r'<[^>]*>', '', data)
     clean = clean.replace("&nbsp;", "")
+    clean = clean.replace("&lt;", "<=")
+    clean = clean.replace("&gt;", ">=")
+    clean = clean.replace("&quot;", "\"")
+
     return clean
 
 
@@ -90,7 +94,7 @@ def add_problem(name, language, description, solution):
         print(language_path, "created!")
 
     #store the problem description and solution in a markdown file
-    md_title = name + language + 'Solution'
+    md_title = name + " " + language + " " + 'Solution'
     md_path = os.path.join(language_path, 'solution')
     md = MdUtils(file_name=md_path, title=md_title)
     md.new_paragraph(description, 'i')
