@@ -1,8 +1,10 @@
 import re
 import os
-import git
+#import git
 import json
 import requests
+import tkinter as tk
+from tkinter import simpledialog
 import config
 from bs4 import BeautifulSoup
 from mdutils.mdutils import MdUtils
@@ -106,7 +108,10 @@ def add_problem(name, language, description, solution):
 def main():
     problem_name = input("What problem did you solve?   ").lower()
     language = input("What language did you use?    ").lower()
-    solution = input("Copy and paste your solution:     ")
+
+    print("Copy and paste your solution:")
+    solution = """{}""".format(input())
+
     url = generate_url(problem_name)
     description = get_problem_data(url)
 
