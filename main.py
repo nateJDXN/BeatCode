@@ -106,14 +106,64 @@ def add_problem(name, language, description, solution):
 
 
 def main():
-    problem_name = input("What problem did you solve?   ").lower()
-    language = input("What language did you use?    ").lower()
+    def problem_input():
+        nonlocal problem_name
+        problem_name = entry.get()
+        window.destroy()
+    
+    def language_input():
+        nonlocal language
+        language = entry.get()
+        window.destroy()
+        
+    def solution_input():
+        nonlocal solution
+        solution = text_box.get("1.0", tk.END)
+        window.destroy()
+        
+    window = tk.Tk()
+    label = tk.Label(text="What problem did you solve?")
+    entry = tk.Entry()
+    button = tk.Button(text="Submit", command=problem_input)
+    
+    label.pack()
+    entry.pack()
+    button.pack()
+    window.mainloop()
+    problem_name = problem_name.lower()
+    
+    
+    window = tk.Tk()
+    label = tk.Label(text="What language did you use?")
+    entry = tk.Entry()
+    button = tk.Button(text="Submit", command=language_input)   
+    
+    label.pack()
+    entry.pack()
+    button.pack()
+    window.mainloop()
+    language = language.lower()
 
-    print("Copy and paste your solution:")
-    solution = """{}""".format(input())
+    
+    window = tk.Tk()
+    label = tk.Label(text="Copy and paste your solution:")
+    text_box = tk.Text()
+    button = tk.Button(text="Submit", command=solution_input)
+    
+    label.pack()
+    text_box.pack()
+    button.pack()
+    window.mainloop()
+    
+    solution = solution
 
     url = generate_url(problem_name)
     description = get_problem_data(url)
+    
+    print(problem_name)
+    print(language)
+    print(description)
+    print(solution)
 
     add_problem(problem_name, language, description, solution)
     
