@@ -70,8 +70,12 @@ def get_problem_data(url):
 
         else:
             if response.status_code == 404:
-                return f"Invalid problem name, check spelling and try again"
-            return f"Error, status code: {response.status_code}"
+                print("Invalid problem name, check spelling and try again")
+                main()
+                
+            print("Error, status code: " + response.status_code)
+            main()
+        
     #handle exceptions: bad urls or no internet
     except requests.RequestException as e:
         return f"{str(e)}"
