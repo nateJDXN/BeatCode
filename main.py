@@ -9,7 +9,7 @@ import config
 from bs4 import BeautifulSoup
 from mdutils.mdutils import MdUtils
 
-path = config.path
+path = '/problems'
 
 def generate_url(problem_name):
     url = "https://leetcode.com/problems/"
@@ -63,8 +63,10 @@ def get_problem_data(url):
                 f.write(str(json.dumps(data, indent=4)))
 
                 #return description
-                data = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [{}])[7].get('state', {}).get('data', {}).get('question', {}).get('content', '')
-                
+                try:
+                    data = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [{}])[7].get('state', {}).get('data', {}).get('question', {}).get('content', '')
+                except:
+                    data = ""
                 #clean data
                 description = clean_data(data)
                  
