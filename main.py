@@ -36,7 +36,10 @@ def get_problem_data(url):
     #check url integrity and grab description if successful
     try:
         #send a GET request to the URL
-        response = requests.get(url)
+        headers = {     # fake header to bypass anti-scraping checks
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        }
+        response = requests.get(url, headers=headers)
         #check response
         if response.status_code == 200:
             
@@ -73,7 +76,7 @@ def get_problem_data(url):
                 print("Invalid problem name, check spelling and try again")
                 main()
                 
-            print("Error, status code: " + response.status_code)
+            print("Error, status code: ", response.status_code)
             main()
         
     #handle exceptions: bad urls or no internet
@@ -172,5 +175,3 @@ def main():
     add_problem(problem_name, language, description, solution)
     
 main()
-
-
